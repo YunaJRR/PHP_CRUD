@@ -31,7 +31,6 @@
     <table class="table table-hover table-bordered">
         <thead class="table-info">
             <tr>
-
                 <?php
                     $currentAction = isset($_GET['action']) ? $_GET['action'] : '';
                     $currentOrder = isset($_GET['order']) ? $_GET['order'] : 'asc';
@@ -42,13 +41,54 @@
                         return $currentOrder === 'asc' ? 'desc' : 'asc';
                     }
                 ?>
-                
-                <th><a href="listado.php?action=sort_nombre_evento&order=<?php echo getSortOrder('sort_nombre_evento', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Nombre del evento</a></th>
-                <th><a href="listado.php?action=sort_tipo_deporte&order=<?php echo getSortOrder('sort_tipo_deporte', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Tipo de deporte</a></th>
-                <th><a href="listado.php?action=sort_fecha&order=<?php echo getSortOrder('sort_fecha', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Fecha</a></th>
-                <th><a href="listado.php?action=sort_hora&order=<?php echo getSortOrder('sort_hora', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Hora</a></th>
-                <th><a href="listado.php?action=sort_ubicacion&order=<?php echo getSortOrder('sort_ubicacion', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Ubicación</a></th>
-                <th><a href="listado.php?action=sort_organizador&order=<?php echo getSortOrder('sort_organizador', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">Organizador</a></th>
+                <th>
+                    <a href="listado.php?action=sort_nombre_evento&order=<?php echo getSortOrder('sort_nombre_evento', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Nombre del evento
+                        <?php if ($currentAction === 'sort_nombre_evento'): 
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
+                        endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="listado.php?action=sort_tipo_deporte&order=<?php echo getSortOrder('sort_tipo_deporte', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Tipo de deporte
+                        <?php if ($currentAction === 'sort_tipo_deporte'): 
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
+                        endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="listado.php?action=sort_fecha&order=<?php echo getSortOrder('sort_fecha', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Fecha
+                        <?php if ($currentAction === 'sort_fecha'): 
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
+                        endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="listado.php?action=sort_hora&order=<?php echo getSortOrder('sort_hora', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Hora
+                        <?php if ($currentAction === 'sort_hora'):
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓';
+                        endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="listado.php?action=sort_ubicacion&order=<?php echo getSortOrder('sort_ubicacion', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Ubicación
+                        <?php if ($currentAction === 'sort_ubicacion'):
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓';
+                        endif; ?>
+                    </a>
+                </th>
+                <th>
+                    <a href="listado.php?action=sort_organizador&order=<?php echo getSortOrder('sort_organizador', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
+                        Organizador
+                        <?php if ($currentAction === 'sort_organizador'):
+                            echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
+                        endif; ?>
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody>
