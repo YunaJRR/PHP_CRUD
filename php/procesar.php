@@ -97,12 +97,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST["hidden-organizador"])
     }
 }
 
+
+// Declaración variables para la paginación
+$limiteEventos = 3; 
+$pagina = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
+$offset = ($pagina - 1) * $limiteEventos; 
+$totalEventos = 0; // Initialize total events variable
+
 // Buscar evento
+$searchTerm = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['buscar-evento'])) {
-    $resultsEventos = obtenerListadoEventos(true);
+    $searchTerm = $_POST['buscar-evento'];
+    
+    // Count the results based on the search
+    $sqlCount = "SELECT COUNT(*) as total FROM eventos WHERE nombre_evento LIKE '%" . $conn->real_escape_string($searchTerm) . "%'";
+    $totalResultados = $conn->query($sqlCount);
+    $totalFilas = $totalResultados->fetch_assoc();
+    $totalEventos = $totalFilas['total'];
+    $totalPaginas = ceil($totalEventos / $limiteEventos);
+    
+    // Fetch the filtered events with pagination
+    $resultsEventos = obtenerListadoEventos(true, $searchTerm, $offset, $limiteEventos);
 } else {
-    $resultsEventos = obtenerListadoEventos(false); 
+    // Count all events for pagination
+    $totalSql = "SELECT COUNT(*) as total FROM eventos";
+    $totalResultados = $conn->query($totalSql);
+    $totalFilas = $totalResultados->fetch_assoc();
+    $totalEventos = $totalFilas['total'];
+    $totalPaginas = ceil($totalEventos / $limiteEventos);
+    
+    // Fetch all events with pagination
+    $resultsEventos = obtenerListadoEventos(false, '', $offset, $limiteEventos);
 }
+
 
 // Borrar evento
 if (isset($_GET['action']) && $_GET['action'] == 'borrar_evento') {
@@ -252,8 +279,13 @@ function obtenerOrganizadores() {
 
 $organizadores = obtenerOrganizadores();
 $currentlyFiltering = false;
+
+
+
 function obtenerListadoEventos($listaOrganizadores) { 
-    global $conn; 
+    global $conn;
+    global $limiteEventos;
+    global $offset;
     $sql = "SELECT eventos.*, organizadores.nombre AS nombre_organizador  
             FROM eventos  
             JOIN organizadores ON eventos.id_organizador = organizadores.id"; 
@@ -299,6 +331,8 @@ function obtenerListadoEventos($listaOrganizadores) {
                 break; 
         } 
     } 
+    
+    $sql .= " LIMIT $limiteEventos OFFSET $offset";
     $result = $conn->query($sql); 
     $listadoEventos = array(); 
 

@@ -44,77 +44,104 @@
                 <th>
                     <a href="listado.php?action=sort_nombre_evento&order=<?php echo getSortOrder('sort_nombre_evento', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Nombre del evento
-                        <?php if ($currentAction === 'sort_nombre_evento'): 
+                        <?php if ($currentAction === 'sort_nombre_evento'){ 
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
                 <th>
                     <a href="listado.php?action=sort_tipo_deporte&order=<?php echo getSortOrder('sort_tipo_deporte', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Tipo de deporte
-                        <?php if ($currentAction === 'sort_tipo_deporte'): 
+                        <?php if ($currentAction === 'sort_tipo_deporte'){ 
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
                 <th>
                     <a href="listado.php?action=sort_fecha&order=<?php echo getSortOrder('sort_fecha', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Fecha
-                        <?php if ($currentAction === 'sort_fecha'): 
+                        <?php if ($currentAction === 'sort_fecha'){ 
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
                 <th>
                     <a href="listado.php?action=sort_hora&order=<?php echo getSortOrder('sort_hora', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Hora
-                        <?php if ($currentAction === 'sort_hora'):
+                        <?php if ($currentAction === 'sort_hora'){
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓';
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
                 <th>
                     <a href="listado.php?action=sort_ubicacion&order=<?php echo getSortOrder('sort_ubicacion', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Ubicación
-                        <?php if ($currentAction === 'sort_ubicacion'):
+                        <?php if ($currentAction === 'sort_ubicacion'){
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓';
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
                 <th>
                     <a href="listado.php?action=sort_organizador&order=<?php echo getSortOrder('sort_organizador', $currentAction, $currentOrder); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>">
                         Organizador
-                        <?php if ($currentAction === 'sort_organizador'):
+                        <?php if ($currentAction === 'sort_organizador'){
                             echo $currentOrder === 'asc' ? ' ↑' : ' ↓'; 
-                        endif; ?>
+                        } ?>
                     </a>
                 </th>
             </tr>
         </thead>
         <tbody>
-            <!--Relleno de la tabla con los datos en caso de que no estén vacíos-->
-        <?php 
-            if (!empty($resultsEventos)){ 
-                foreach ($resultsEventos as $row){ 
-        echo "<tr>
-
-            <td> {$row['nombre_evento']} </td>
-            <td> {$row['tipo_deporte']} </td>
-            <td> {$row['fecha']} </td>
-            <td> {$row['hora']} </td>
-            <td> {$row['ubicacion']} </td>
-            <td> {$row['nombre_organizador']} </td>
-            <td>
-                <a href='añadir_evento.php?id={$row['id']}' class='btn btn-primary'>Editar</a>
-                <a href='php/procesar.php?id={$row['id']}&action=borrar_evento' class='btn btn-danger' onclick='return confirmarEvento()'>Eliminar</a>
-            </td>
-        </tr>";
+            <?php 
+                if (!empty($resultsEventos)){ 
+                    foreach ($resultsEventos as $row){ 
+                        echo "<tr>
+                            <td> {$row['nombre_evento']} </td>
+                            <td> {$row['tipo_deporte']} </td>
+                            <td> {$row['fecha']} </td>
+                            <td> {$row['hora']} </td>
+                            <td> {$row['ubicacion']} </td>
+                            <td> {$row['nombre_organizador']} </td>
+                            <td>
+                                <a href='añadir_evento.php?id={$row['id']}' class='btn btn-primary'>Editar</a>
+                                <a href='php/procesar.php?id={$row['id']}&action=borrar_evento' class='btn btn-danger' onclick='return confirmarEvento()'>Eliminar</a>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr>
+                        <td colspan='7' class='text-center'>No hay eventos disponibles.</td>
+                    </tr>";
                 }
-            }
-        ?>
+            ?>
         </tbody>
         
-    </table><br>
+    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <?php if ($pagina <= 1) echo 'disabled'; ?>">
+                            <a class="page-link" href="listado.php?page=<?php echo max(1, $pagina - 1); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <?php for ($i = 1; $i <= $totalPaginas && $i <= 10; $i++){ ?>
+                            <li class="page-item <?php echo $i === $pagina ? 'active' : ''; ?>">
+                                <a class="page-link" href="listado.php?page=<?php echo $i; ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php }; ?>
+                        <li class="page-item <?php if ($pagina >= $totalPaginas) echo 'disabled'; ?>">
+                            <a class="page-link" href="listado.php?page=<?php echo min($totalPaginas, $pagina + 1); ?>&buscar-evento=<?php echo urlencode($currentSearch); ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 
     <!--Listado de los organizadores-->
     <h1 class="text-center">Listado de organizadores</h1><br>
@@ -132,21 +159,24 @@
             </tr>
         </thead>
         <tbody>
-        <?php 
-            if (!empty($organizadores)){ 
-                foreach ($organizadores as $row){ 
-        echo "<tr>
-
-            <td> {$row['nombre']} </td>
-            <td> {$row['email']} </td>
-            <td> {$row['telefono']} </td>
-            <td>
-                <a href=\"php/procesar.php?id=" . $row['id'] . "&action=borrar_organizador\" class=\"btn btn-danger\" onclick=\"return confirmar()\">Eliminar</a>
-            </td>
-        </tr>";
+            <?php 
+                if (!empty($organizadores)){ 
+                    foreach ($organizadores as $row){ 
+                        echo "<tr>
+                            <td> {$row['nombre']} </td>
+                            <td> {$row['email']} </td>
+                            <td> {$row['telefono']} </td>
+                            <td>
+                                <a href=\"php/procesar.php?id=" . $row['id'] . "&action=borrar_organizador\" class=\"btn btn-danger\" onclick=\"return confirmar()\">Eliminar</a>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr>
+                        <td colspan='3' class='text-center'>No hay organizadores disponibles.</td>
+                    </tr>";
                 }
-            }
-        ?>
+            ?>
         </tbody>
         
     </table>
